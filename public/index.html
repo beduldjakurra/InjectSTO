@@ -2235,14 +2235,6 @@
     </div>
     
     <div class="main-app" id="mainApp">
-        <div class="action-buttons" style="margin-bottom: 20px;">
-  <button id="exportExcelBtn" class="btn btn-primary">
-    <i class="fa fa-file-excel"></i> Ekspor Excel Tabel Aktif
-  </button>
-  <button id="exportJpgBtn" class="btn btn-secondary">
-    <i class="fa fa-file-image"></i> Ekspor JPG Tabel Aktif
-  </button>
-</div>
         <div class="container">
             <header>
                 <h1 id="pageTitle">
@@ -2276,7 +2268,7 @@
                     <button class="action-button save btn-modern btn-modern-primary" id="saveExcelButton" aria-label="Save to Excel and Share" role="button" tabindex="0" data-title="Save to Excel">
                         <i class="fas fa-file-excel"></i> <span>Save to Excel</span>
                     </button>
-                    <button class="action-button jpg-share btn-modern btn-modern-purple" id="shareJpgButton" aria-label="Convert to JPG and Share" role="button" tabindex="0" data-title="Convert to JPG" onclick="ShareManager.captureStockProductionTable()">
+                    <button class="action-button jpg-share btn-modern btn-modern-purple" id="shareJpgButton" aria-label="Convert to JPG and Share" role="button" tabindex="0" data-title="Convert to JPG" onclick="ShareManager.captureActiveTable()">
                         <i class="fas fa-image"></i> <span>Convert to JPG</span>
                     </button>
                     <button class="action-button import btn-modern btn-modern-primary" id="importExcelButton" aria-label="Import Excel" role="button" tabindex="0" data-title="Import Excel">
@@ -4635,7 +4627,7 @@
         
         // ===== SHARE FUNCTIONS =====
         const ShareManager = {
-            captureStockProductionTable: async () => {
+            captureActiveTable: async () => {
                 try {
                     // Check if we're online
                     if (!APP_STATE.isOnline) {
@@ -4646,10 +4638,34 @@
                         throw new Error('Library html2canvas tidak tersedia.');
                     }
                     
+                    // Determine which table to capture based on current view
+                    let targetTable, tableTitle, tableId;
+                    
+                    switch(APP_STATE.currentView) {
+                        case 'main':
+                            targetTable = document.getElementById('mainTable');
+                            tableTitle = 'Laporan Stock Produksi';
+                            tableId = 'mainTable';
+                            break;
+                        case 'second':
+                            targetTable = document.getElementById('secondTable');
+                            tableTitle = 'Perhitungan Box';
+                            tableId = 'secondTable';
+                            break;
+                        case 'third':
+                            targetTable = document.getElementById('thirdTable');
+                            tableTitle = 'Kekuatan Stock';
+                            tableId = 'thirdTable';
+                            break;
+                        default:
+                            targetTable = document.getElementById('mainTable');
+                            tableTitle = 'Laporan Stock Produksi';
+                            tableId = 'mainTable';
+                    }
+                    
                     // Check if the target table exists
-                    const targetTable = document.getElementById('mainTable');
                     if (!targetTable) {
-                        throw new Error('Tabel Stock Produksi tidak ditemukan.');
+                        throw new Error('Tabel tidak ditemukan.');
                     }
                     
                     // Simpan state mode saat ini
@@ -4682,7 +4698,7 @@
                     headerInfo.innerHTML = `
                         <h1>PT FUJI SEAT INDONESIA</h1>
                         <h2>Laporan Data Stock Akhir Proses Div.INJECTION</h2>
-                        <h3>Laporan Stock Produksi</h3>
+                        <h3>${tableTitle}</h3>
                         <p>Shift: ${originalNightMode ? 'NIGHT' : 'DAY'} | Tanggal: ${DOM.currentDate.textContent}</p>
                     `;
                     wrapper.appendChild(headerInfo);
@@ -4981,8 +4997,8 @@
                             document.body.classList.add('night-mode');
                         }
                         
-                        // Buat nama file
-                        const fileName = `Laporan_Stock_Produksi_${originalNightMode ? 'Night' : 'Day'}_${new Date().toISOString().slice(0, 10)}.jpg`;
+                        // Buat nama file berdasarkan tabel yang aktif
+                        const fileName = `Laporan_${tableTitle.replace(/\s+/g, '_')}_${originalNightMode ? 'Night' : 'Day'}_${new Date().toISOString().slice(0, 10)}.jpg`;
                         
                         try {
                             // Unduh gambar
@@ -4999,7 +5015,7 @@
                     }
                     
                 } catch (e) {
-                    ErrorHandler.handleError(e, 'ShareManager.captureStockProductionTable');
+                    ErrorHandler.handleError(e, 'ShareManager.captureActiveTable');
                 }
             }
         };
@@ -5007,62 +5023,5 @@
         // ===== INISIALISASI APLIKASI =====
         document.addEventListener('DOMContentLoaded', AppCore.init);
     </script>
-    <script>
-  // Fungsi utilitas untuk ekspor Excel & JPG tabel aktif
-  function getActiveTableInfo() {
-    // APP_STATE.currentView: 'main', 'second', 'third'
-    let tableId, tableTitle;
-    if (typeof APP_STATE !== "undefined" && APP_STATE.currentView) {
-      if (APP_STATE.currentView === 'main') {
-        tableId = 'mainTable';
-        tableTitle = 'Stock Produksi';
-      } else if (APP_STATE.currentView === 'second') {
-        tableId = 'boxCalculationTable';
-        tableTitle = 'Perhitungan Box';
-      } else if (APP_STATE.currentView === 'third') {
-        tableId = 'stockStrengthTable';
-        tableTitle = 'Kekuatan Stock';
-      }
-    }
-    return { tableId, tableTitle };
-  }
-
-  function exportTableToExcel(tableId, filename) {
-    const table = document.getElementById(tableId);
-    if (!table) return alert('Tabel tidak ditemukan');
-    var wb = XLSX.utils.table_to_book(table, {sheet:"Sheet1"});
-    XLSX.writeFile(wb, filename);
-  }
-
-  function exportTableToJPG(tableId, filename) {
-    const table = document.getElementById(tableId);
-    if (!table) return alert('Tabel tidak ditemukan');
-    html2canvas(table).then(canvas => {
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = canvas.toDataURL('image/jpeg');
-      link.click();
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const excelBtn = document.getElementById('exportExcelBtn');
-    const jpgBtn = document.getElementById('exportJpgBtn');
-    if (excelBtn) {
-      excelBtn.addEventListener('click', function() {
-        const { tableId, tableTitle } = getActiveTableInfo();
-        if (!tableId) return alert('Tabel aktif tidak terdeteksi');
-        exportTableToExcel(tableId, `${tableTitle}.xlsx`);
-      });
-    }
-    if (jpgBtn) {
-      jpgBtn.addEventListener('click', function() {
-        const { tableId, tableTitle } = getActiveTableInfo();
-        if (!tableId) return alert('Tabel aktif tidak terdeteksi');
-        exportTableToJPG(tableId, `${tableTitle}.jpg`);
-      });
-    }
-  });
-</script>
 </body>
 </html>
