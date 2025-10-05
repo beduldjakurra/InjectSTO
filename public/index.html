@@ -5007,5 +5007,62 @@
         // ===== INISIALISASI APLIKASI =====
         document.addEventListener('DOMContentLoaded', AppCore.init);
     </script>
+    <script>
+  // Fungsi utilitas untuk ekspor Excel & JPG tabel aktif
+  function getActiveTableInfo() {
+    // APP_STATE.currentView: 'main', 'second', 'third'
+    let tableId, tableTitle;
+    if (typeof APP_STATE !== "undefined" && APP_STATE.currentView) {
+      if (APP_STATE.currentView === 'main') {
+        tableId = 'mainTable';
+        tableTitle = 'Stock Produksi';
+      } else if (APP_STATE.currentView === 'second') {
+        tableId = 'boxCalculationTable';
+        tableTitle = 'Perhitungan Box';
+      } else if (APP_STATE.currentView === 'third') {
+        tableId = 'stockStrengthTable';
+        tableTitle = 'Kekuatan Stock';
+      }
+    }
+    return { tableId, tableTitle };
+  }
+
+  function exportTableToExcel(tableId, filename) {
+    const table = document.getElementById(tableId);
+    if (!table) return alert('Tabel tidak ditemukan');
+    var wb = XLSX.utils.table_to_book(table, {sheet:"Sheet1"});
+    XLSX.writeFile(wb, filename);
+  }
+
+  function exportTableToJPG(tableId, filename) {
+    const table = document.getElementById(tableId);
+    if (!table) return alert('Tabel tidak ditemukan');
+    html2canvas(table).then(canvas => {
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/jpeg');
+      link.click();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const excelBtn = document.getElementById('exportExcelBtn');
+    const jpgBtn = document.getElementById('exportJpgBtn');
+    if (excelBtn) {
+      excelBtn.addEventListener('click', function() {
+        const { tableId, tableTitle } = getActiveTableInfo();
+        if (!tableId) return alert('Tabel aktif tidak terdeteksi');
+        exportTableToExcel(tableId, `${tableTitle}.xlsx`);
+      });
+    }
+    if (jpgBtn) {
+      jpgBtn.addEventListener('click', function() {
+        const { tableId, tableTitle } = getActiveTableInfo();
+        if (!tableId) return alert('Tabel aktif tidak terdeteksi');
+        exportTableToJPG(tableId, `${tableTitle}.jpg`);
+      });
+    }
+  });
+</script>
 </body>
 </html>
