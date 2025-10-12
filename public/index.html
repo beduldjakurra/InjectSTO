@@ -39,9 +39,6 @@
         }
     </script>
     
-    <!-- Polyfill untuk browser lama -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6,fetch,IntersectionObserver,ResizeObserver"></script>
-    
     <!-- External Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -155,11 +152,14 @@
             color: var(--dark-text);
         }
         
-        /* Cover Screen - PERUBAHAN: Background abstrak geometris seperti gambar */
+        /* Cover Screen - PERBAIKAN: Tampilan lebih menarik dengan background gambar */
         .cover-screen {
             position: fixed;
             inset: 0;
-            background: linear-gradient(135deg, #1e3a8a 0%, #f59e0b 100%);
+            background-image: url('https://z-cdn-media.chatglm.cn/files/2afa6148-2bd8-47cc-bfd9-1af427435138_pasted_image_1760076489949.jpg?auth_key=1791613068-7746baced6164c22afa9341573a1d4c0-0-b056c84fe88f4099ecc09039bbd4d41f');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -168,92 +168,15 @@
             overflow: hidden;
         }
         
-        /* Elemen geometris abstrak seperti pada gambar */
-        .geometric-shape {
+        .cover-screen::before {
+            content: "";
             position: absolute;
-            border-radius: 50%;
-            opacity: 0.7;
-            filter: blur(30px);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Overlay gelap untuk meningkatkan keterbacaan teks */
             z-index: -1;
-        }
-        
-        /* Bentuk 1 - Lingkaran besar biru tua */
-        .shape-1 {
-            top: 15%;
-            left: 10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(30, 58, 138, 0.9) 0%, rgba(30, 58, 138, 0.4) 50%, rgba(30, 58, 138, 0) 70%);
-            animation: float 20s infinite ease-in-out;
-        }
-        
-        /* Bentuk 2 - Lingkaran sedang cyan */
-        .shape-2 {
-            top: 60%;
-            left: 65%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(6, 214, 160, 0.9) 0%, rgba(6, 214, 160, 0.4) 50%, rgba(6, 214, 160, 0) 70%);
-            animation: float 15s infinite ease-in-out reverse;
-        }
-        
-        /* Bentuk 3 - Elips horizontal biru muda */
-        .shape-3 {
-            top: 30%;
-            left: 50%;
-            width: 350px;
-            height: 250px;
-            background: radial-gradient(ellipse, rgba(59, 130, 246, 0.9) 0%, rgba(59, 130, 246, 0.4) 50%, rgba(59, 130, 246, 0) 70%);
-            border-radius: 50%;
-            animation: float 18s infinite ease-in-out;
-        }
-        
-        /* Bentuk 4 - Elips vertikal putih */
-        .shape-4 {
-            top: 45%;
-            left: 25%;
-            width: 200px;
-            height: 320px;
-            background: radial-gradient(ellipse, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 70%);
-            border-radius: 50%;
-            animation: float 22s infinite ease-in-out reverse;
-        }
-        
-        /* Bentuk 5 - Lingkaran kecil pink */
-        .shape-5 {
-            top: 70%;
-            left: 15%;
-            width: 180px;
-            height: 180px;
-            background: radial-gradient(circle, rgba(247, 37, 133, 0.9) 0%, rgba(247, 37, 133, 0.4) 50%, rgba(247, 37, 133, 0) 70%);
-            animation: float 25s infinite ease-in-out;
-        }
-        
-        /* Bentuk 6 - Elips diagonal cyan */
-        .shape-6 {
-            top: 20%;
-            left: 75%;
-            width: 280px;
-            height: 180px;
-            background: radial-gradient(ellipse, rgba(103, 232, 249, 0.9) 0%, rgba(103, 232, 249, 0.4) 50%, rgba(103, 232, 249, 0) 70%);
-            border-radius: 50%;
-            transform: rotate(45deg);
-            animation: float 17s infinite ease-in-out reverse;
-        }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            25% {
-                transform: translate(30px, -20px) scale(1.05);
-            }
-            50% {
-                transform: translate(-20px, 15px) scale(0.95);
-            }
-            75% {
-                transform: translate(15px, 25px) scale(1.02);
-            }
         }
         
         .cover-screen.hidden {
@@ -285,7 +208,7 @@
             font-weight: 700;
             color: white;
             margin-bottom: var(--spacing-sm);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             letter-spacing: 1px;
         }
         
@@ -295,6 +218,7 @@
             max-width: 600px;
             line-height: var(--line-height-base);
             font-weight: 400;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.4);
         }
         
         /* Buttons - PERBAIKAN: Tampilan lebih menarik */
@@ -623,7 +547,6 @@
             max-width: 100%;
             scrollbar-width: thin;
             scrollbar-color: var(--primary) var(--gray-light);
-            will-change: transform; /* Optimasi untuk hardware acceleration */
         }
         
         body.night-mode .table-container {
@@ -1314,7 +1237,6 @@
             transition: var(--transition);
             position: relative;
             overflow: hidden;
-            min-height: 44px; /* Touch target size yang cukup */
         }
         
         .action-button::before {
@@ -1920,101 +1842,6 @@
             }
         }
         
-        @media (max-width: 360px) {
-            /* Perbaikan untuk layar sangat kecil */
-            h1 {
-                font-size: 1.2rem;
-                flex-direction: column;
-            }
-            
-            .action-button span {
-                display: none; /* Sembunyikan teks di layar sangat kecil */
-            }
-            
-            .action-button::after {
-                content: attr(data-title);
-                position: absolute;
-                bottom: -25px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0,0,0,0.8);
-                color: white;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-size: 0.7rem;
-                white-space: nowrap;
-            }
-            
-            /* Perbaikan ukuran font untuk Android */
-            th, td {
-                font-size: 0.9rem;
-                padding: 4px;
-            }
-        }
-        
-        /* Nonaktifkan hover effects di mobile */
-        @media (hover: none) {
-            tr:hover {
-                background: none !important;
-            }
-            
-            .action-button:hover {
-                transform: none !important;
-            }
-            
-            .btn:hover {
-                transform: none !important;
-            }
-            
-            .btn-modern:hover {
-                transform: none !important;
-            }
-            
-            .modern-card:hover {
-                transform: none !important;
-            }
-            
-            .badge:hover {
-                transform: none !important;
-            }
-            
-            .nav-button:hover {
-                transform: none !important;
-            }
-            
-            .mode-toggle:hover {
-                transform: none !important;
-            }
-            
-            .sync-status:hover {
-                transform: none !important;
-            }
-            
-            .import-instruction:hover {
-                transform: none !important;
-            }
-            
-            .offline-button:hover {
-                transform: none !important;
-            }
-            
-            .error-button:hover {
-                transform: none !important;
-            }
-            
-            .modal-button:hover {
-                transform: none !important;
-            }
-            
-            .tab:hover {
-                color: var(--gray);
-            }
-            
-            body.night-mode .tab:hover {
-                color: var(--gray-light);
-            }
-        }
-        
         /* Utilities */
         .sr-only {
             position: absolute;
@@ -2369,51 +2196,12 @@
                 display: block; /* Fix for flexbox in Edge */
             }
         }
-        
-        /* Safari-specific fixes */
-        @supports (-webkit-touch-callout: none) {
-            /* Perbaikan untuk Safari iOS */
-            .action-button {
-                -webkit-tap-highlight-color: rgba(0,0,0,0);
-                -webkit-user-select: none;
-            }
-            
-            .table-container {
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            input[type="number"] {
-                -webkit-appearance: none;
-                border-radius: 0;
-            }
-        }
-        
-        /* Android browser specific fixes */
-        body.android-browser {
-            /* Perbaikan untuk browser Android */
-            th, td {
-                font-size: 0.9rem;
-                padding: 4px;
-            }
-            
-            .action-button {
-                min-height: 44px; /* Touch target size yang cukup */
-            }
-        }
     </style>
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
     
     <div class="cover-screen" id="coverScreen">
-        <!-- Elemen geometris abstrak seperti pada gambar -->
-        <div class="geometric-shape shape-1"></div>
-        <div class="geometric-shape shape-2"></div>
-        <div class="geometric-shape shape-3"></div>
-        <div class="geometric-shape shape-4"></div>
-        <div class="geometric-shape shape-5"></div>
-        <div class="geometric-shape shape-6"></div>
-        
         <div class="logo-container">
             <!-- Logo Image - Tambahan baru -->
             <div class="logo-image"></div>
@@ -2750,26 +2538,6 @@
             errorModalCloseButton: document.getElementById('errorModalCloseButton')
         };
         
-        // ===== BROWSER DETECTOR =====
-        const BrowserDetector = {
-            init: () => {
-                const userAgent = navigator.userAgent;
-                // Deteksi browser spesifik
-                if (userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') === -1) {
-                    document.body.classList.add('safari-browser');
-                }
-                if (userAgent.indexOf('Firefox') > -1) {
-                    document.body.classList.add('firefox-browser');
-                }
-                if (userAgent.indexOf('Edge') > -1) {
-                    document.body.classList.add('edge-browser');
-                }
-                if (/Android/.test(userAgent)) {
-                    document.body.classList.add('android-browser');
-                }
-            }
-        };
-        
         // ===== SERVICE WORKER REGISTRATION =====
         const ServiceWorkerManager = {
             register: async () => {
@@ -2941,7 +2709,6 @@
                     }
                 } else {
                     DOM.offlineIndicator.style.display = 'block';
-                    DOM.offlineIndicator.style.animation = 'fadeInDown 0.3s ease';
                     SyncManager.updateStatus('error', 'Anda sedang offline');
                     
                     // Show offline page if we're in main app
@@ -2950,14 +2717,6 @@
                         if (DOM.offlinePage) {
                             DOM.offlinePage.classList.remove('hidden');
                         }
-                    }
-                    
-                    // Simpan data secara otomatis saat offline
-                    if (APP_STATE.autoSaveInterval) {
-                        clearInterval(APP_STATE.autoSaveInterval);
-                        APP_STATE.autoSaveInterval = setInterval(() => {
-                            AppCore.saveDataToLocalStorage();
-                        }, 10000); // Simpan lebih sering saat offline
                     }
                 }
             },
@@ -4927,11 +4686,8 @@
                     wrapper.style.position = 'absolute';
                     wrapper.style.top = '0';
                     wrapper.style.left = '0';
-                    
-                    // Optimasi gambar untuk mobile
-                    const maxWidth = window.innerWidth < 768 ? 800 : 1200;
-                    wrapper.style.width = maxWidth + 'px';
-                    wrapper.style.maxWidth = maxWidth + 'px';
+                    wrapper.style.width = '1200px';
+                    wrapper.style.maxWidth = '1200px';
                     wrapper.style.backgroundColor = '#ffffff';
                     wrapper.style.padding = '20px';
                     wrapper.style.boxSizing = 'border-box';
@@ -5126,8 +4882,8 @@
                                     // Pastikan semua styling diterapkan dengan benar di clone
                                     const clonedWrapper = clonedDoc.querySelector('.capture-wrapper');
                                     if (clonedWrapper) {
-                                        clonedWrapper.style.width = maxWidth + 'px';
-                                        clonedWrapper.style.maxWidth = maxWidth + 'px';
+                                        clonedWrapper.style.width = '1200px';
+                                        clonedWrapper.style.maxWidth = '1200px';
                                         clonedWrapper.style.backgroundColor = '#ffffff';
                                         
                                         // Terapkan styling ke tabel di clone
@@ -5270,13 +5026,7 @@
         };
         
         // ===== INISIALISASI APLIKASI =====
-        document.addEventListener('DOMContentLoaded', () => {
-            // Inisialisasi browser detector
-            BrowserDetector.init();
-            
-            // Inisialisasi aplikasi
-            AppCore.init();
-        });
+        document.addEventListener('DOMContentLoaded', AppCore.init);
     </script>
 </body>
 </html>
