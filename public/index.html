@@ -45,7 +45,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <!-- Icon Performance Optimizer -->
-    <script src="icon-optimizer.js" defer></script>
+    <script src="icon-optimizer.js" defer=""></script>
     
     <!-- Performance Monitoring (Development) -->
     <script>
@@ -156,16 +156,17 @@
         .cover-screen {
             position: fixed;
             inset: 0;
-            background-image: url('https://z-cdn-media.chatglm.cn/files/2afa6148-2bd8-47cc-bfd9-1af427435138_pasted_image_1760076489949.jpg?auth_key=1791613068-7746baced6164c22afa9341573a1d4c0-0-b056c84fe88f4099ecc09039bbd4d41f');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 2000;
             overflow: hidden;
+            /* Ganti background dengan gambar */
+            background-image: url('https://z-cdn-media.chatglm.cn/files/2afa6148-2bd8-47cc-bfd9-1af427435138_pasted_image_1760076489949.jpg?auth_key=1791976820-a26f9e6e65a5450dae830892aae6a97f-0-6cd66196125dc870ff88266d122daa6a');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         
         .cover-screen::before {
@@ -175,8 +176,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Overlay gelap untuk meningkatkan keterbacaan teks */
             z-index: -1;
+            /* Overlay gelap untuk kontras teks */
+            background-color: rgba(0, 0, 0, 0.3);
         }
         
         .cover-screen.hidden {
@@ -189,7 +191,7 @@
             text-align: center;
             margin-bottom: var(--spacing-xl);
             animation: fadeInUp 0.8s ease forwards;
-            z-index: 1;
+            z-index: 1; /* Pastikan di atas overlay */
         }
         
         .logo-image {
@@ -208,17 +210,17 @@
             font-weight: 700;
             color: white;
             margin-bottom: var(--spacing-sm);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Tambah bayangan untuk keterbacaan */
             letter-spacing: 1px;
         }
         
         .logo-subtitle {
             font-size: var(--font-size-lg);
-            color: rgba(255,255,255,0.9);
+            color: rgba(255,255,255,0.95); /* Putih dengan sedikit transparansi */
             max-width: 600px;
             line-height: var(--line-height-base);
             font-weight: 400;
-            text-shadow: 0 1px 5px rgba(0,0,0,0.4);
+            text-shadow: 0 1px 5px rgba(0,0,0,0.5); /* Tambah bayangan untuk keterbacaan */
         }
         
         /* Buttons - PERBAIKAN: Tampilan lebih menarik */
@@ -279,9 +281,9 @@
         }
         
         .enter-button {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.2); /* Semi-transparan untuk kontras */
             color: white;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.5);
             padding: var(--spacing-md) var(--spacing-xl);
             font-size: var(--font-size-lg);
             border-radius: 50px;
@@ -290,14 +292,15 @@
             backdrop-filter: blur(10px);
             transition: var(--transition);
             animation: fadeInUp 0.8s ease 0.3s both;
-            z-index: 1;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3); /* Tambah bayangan untuk keterbacaan */
+            z-index: 1; /* Pastikan di atas overlay */
         }
         
         .enter-button:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.7);
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
         .enter-button i {
@@ -2196,6 +2199,50 @@
                 display: block; /* Fix for flexbox in Edge */
             }
         }
+        
+        /* NEW: Table Footer Styles */
+        .table-footer {
+            background-color: #f8f9fa;
+            border-top: 2px solid var(--primary);
+            padding: var(--spacing-md);
+            text-align: center;
+            font-size: var(--font-size-sm);
+            color: var(--dark);
+            margin-top: var(--spacing-md);
+        }
+        
+        body.night-mode .table-footer {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+            border-top: 2px solid var(--primary-light);
+        }
+        
+        .table-footer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+        
+        .table-footer-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .table-footer-label {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        body.night-mode .table-footer-label {
+            color: var(--primary-light);
+        }
+        
+        .table-footer-value {
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -2330,6 +2377,27 @@
                                 </tr>
                             </thead>
                             <tbody id="mainTableBody"></tbody>
+                            <!-- NEW: Table Footer -->
+                            <tfoot>
+                                <tr>
+                                    <td colspan="8" class="table-footer">
+                                        <div class="table-footer-info">
+                                            <div class="table-footer-item">
+                                                <span class="table-footer-label"><br></span>
+                                                <span class="table-footer-value">FM-003 : FM-448 : FJI-PD-38</span>
+                                            </div>
+                                            <div class="table-footer-item">
+                                                <span class="table-footer-label"><br></span>
+                                                <span class="table-footer-value">Tanggal : 14-OCT-25</span>
+                                            </div>
+                                            <div class="table-footer-item">
+                                                <span class="table-footer-label"><br></span>
+                                                <span class="table-footer-value">No.Revisi : 00&nbsp; &nbsp; &nbsp;Hal : 1/1</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -2535,7 +2603,9 @@
             errorModal: document.getElementById('errorModal'),
             errorMessage: document.getElementById('errorMessage'),
             errorDetails: document.getElementById('errorDetails'),
-            errorModalCloseButton: document.getElementById('errorModalCloseButton')
+            errorModalCloseButton: document.getElementById('errorModalCloseButton'),
+            // NEW: Table footer elements
+            tableFooterDate: document.getElementById('tableFooterDate')
         };
         
         // ===== SERVICE WORKER REGISTRATION =====
@@ -3221,6 +3291,14 @@
             updateDate: () => {
                 const now = new Date();
                 DOM.currentDate.textContent = Utils.formatDate(now);
+                
+                // Update table footer date
+                if (DOM.tableFooterDate) {
+                    const day = now.getDate().toString().padStart(2, '0');
+                    const month = now.toLocaleString('id-ID', { month: 'short' }).toUpperCase();
+                    const year = now.getFullYear().toString().slice(-2);
+                    DOM.tableFooterDate.textContent = `${day}-${month}-${year}`;
+                }
             },
             
             initializeTables: () => {
@@ -4231,20 +4309,26 @@
                     
                     const wb = XLSX.utils.book_new();
                     
-                    // Buat style untuk border
+                    // Buat style untuk border yang lebih tebal
                     const borderStyle = {
                         border: {
-                            top: { style: "thin", color: { rgb: "000000" } },
-                            left: { style: "thin", color: { rgb: "000000" } },
-                            bottom: { style: "thin", color: { rgb: "000000" } },
-                            right: { style: "thin", color: { rgb: "000000" } }
+                            top: { style: "medium", color: { rgb: "000000" } },
+                            left: { style: "medium", color: { rgb: "000000" } },
+                            bottom: { style: "medium", color: { rgb: "000000" } },
+                            right: { style: "medium", color: { rgb: "000000" } }
                         }
                     };
                     
                     const headerStyle = {
-                        font: { bold: true, color: { rgb: "FFFFFF" } },
+                        font: { bold: true, color: { rgb: "FFFFFF" }, size: 12 },
                         fill: { fgColor: { rgb: "4361EE" } },
-                        alignment: { horizontal: "center" },
+                        alignment: { horizontal: "center", vertical: "center" },
+                        border: borderStyle.border
+                    };
+                    
+                    const footerStyle = {
+                        font: { bold: false, size: 10 },
+                        alignment: { horizontal: "left", vertical: "center" },
                         border: borderStyle.border
                     };
                     
@@ -4263,8 +4347,27 @@
                         ]);
                     }
                     
+                    // Tambahkan baris kosong dan footer
+                    data1.push(['', '', '', '', '', '', '', '']);
+                    data1.push(['FM-003 : FM-448 : FJI-PD-38', '', 'Tanggal : 14-OCT-25', '', 'No.Revisi : 00     Hal : 1/1', '', '', '']);
+                    
                     // Buat worksheet dengan style
                     const ws1 = XLSX.utils.aoa_to_sheet(data1);
+                    
+                    // Set column widths - lebih lebar untuk footer tidak terpotong
+                    ws1['!cols'] = [
+                        { wch: 30 }, { wch: 15 }, { wch: 20 }, { wch: 15 }, 
+                        { wch: 25 }, { wch: 15 }, { wch: 15 }, { wch: 15 }
+                    ];
+                    
+                    // Merge cells untuk footer
+                    const footerRowIndex = data1.length - 1;
+                    if (!ws1['!merges']) ws1['!merges'] = [];
+                    ws1['!merges'].push(
+                        { s: { r: footerRowIndex, c: 0 }, e: { r: footerRowIndex, c: 1 } }, // FM-003
+                        { s: { r: footerRowIndex, c: 2 }, e: { r: footerRowIndex, c: 3 } }, // Tanggal
+                        { s: { r: footerRowIndex, c: 4 }, e: { r: footerRowIndex, c: 7 } }  // No.Revisi
+                    );
                     
                     // Terapkan style untuk header
                     for (let col = 0; col < data1[0].length; col++) {
@@ -4273,14 +4376,25 @@
                         ws1[cellAddress].s = headerStyle;
                     }
                     
-                    // Terapkan border untuk semua sel
-                    for (let row = 0; row < data1.length; row++) {
+                    // Terapkan border untuk semua sel data
+                    for (let row = 0; row < data1.length - 2; row++) {
                         for (let col = 0; col < data1[row].length; col++) {
                             const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
                             if (!ws1[cellAddress]) ws1[cellAddress] = {};
                             if (!ws1[cellAddress].s) ws1[cellAddress].s = {};
                             ws1[cellAddress].s.border = borderStyle.border;
+                            if (row > 0) {
+                                ws1[cellAddress].s.alignment = { horizontal: "center", vertical: "center" };
+                            }
                         }
+                    }
+                    
+                    // Terapkan style untuk footer (baris terakhir)
+                    const footerRow = data1.length - 1;
+                    for (let col = 0; col < data1[0].length; col++) {
+                        const cellAddress = XLSX.utils.encode_cell({ r: footerRow, c: col });
+                        if (!ws1[cellAddress]) ws1[cellAddress] = {};
+                        ws1[cellAddress].s = footerStyle;
                     }
                     
                     XLSX.utils.book_append_sheet(wb, ws1, 'Production');
@@ -4296,7 +4410,23 @@
                         ]);
                     }
                     
+                    // Tambahkan baris kosong dan footer
+                    data2.push(['', '', '', '']);
+                    data2.push(['FM-003 : FM-448 : FJI-PD-38', 'Tanggal : 14-OCT-25', '', 'No.Revisi : 00     Hal : 1/1']);
+                    
                     const ws2 = XLSX.utils.aoa_to_sheet(data2);
+                    
+                    // Set column widths - lebih lebar
+                    ws2['!cols'] = [
+                        { wch: 30 }, { wch: 20 }, { wch: 15 }, { wch: 30 }
+                    ];
+                    
+                    // Merge cells untuk footer
+                    const footerRowIndex2 = data2.length - 1;
+                    if (!ws2['!merges']) ws2['!merges'] = [];
+                    ws2['!merges'].push(
+                        { s: { r: footerRowIndex2, c: 2 }, e: { r: footerRowIndex2, c: 3 } }  // No.Revisi merge dengan kolom terakhir
+                    );
                     
                     // Terapkan style untuk header
                     for (let col = 0; col < data2[0].length; col++) {
@@ -4305,14 +4435,25 @@
                         ws2[cellAddress].s = headerStyle;
                     }
                     
-                    // Terapkan border untuk semua sel
-                    for (let row = 0; row < data2.length; row++) {
+                    // Terapkan border untuk semua sel data
+                    for (let row = 0; row < data2.length - 2; row++) {
                         for (let col = 0; col < data2[row].length; col++) {
                             const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
                             if (!ws2[cellAddress]) ws2[cellAddress] = {};
                             if (!ws2[cellAddress].s) ws2[cellAddress].s = {};
                             ws2[cellAddress].s.border = borderStyle.border;
+                            if (row > 0) {
+                                ws2[cellAddress].s.alignment = { horizontal: "center", vertical: "center" };
+                            }
                         }
+                    }
+                    
+                    // Terapkan style untuk footer
+                    const footerRow2 = data2.length - 1;
+                    for (let col = 0; col < data2[0].length; col++) {
+                        const cellAddress = XLSX.utils.encode_cell({ r: footerRow2, c: col });
+                        if (!ws2[cellAddress]) ws2[cellAddress] = {};
+                        ws2[cellAddress].s = footerStyle;
                     }
                     
                     XLSX.utils.book_append_sheet(wb, ws2, 'Box Calculation');
@@ -4330,7 +4471,25 @@
                         ]);
                     }
                     
+                    // Tambahkan baris kosong dan footer
+                    data3.push(['', '', '', '', '', '']);
+                    data3.push(['FM-003 : FM-448 : FJI-PD-38', '', 'Tanggal : 14-OCT-25', '', 'No.Revisi : 00     Hal : 1/1', '']);
+                    
                     const ws3 = XLSX.utils.aoa_to_sheet(data3);
+                    
+                    // Set column widths - lebih lebar
+                    ws3['!cols'] = [
+                        { wch: 25 }, { wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 25 }, { wch: 30 }
+                    ];
+                    
+                    // Merge cells untuk footer
+                    const footerRowIndex3 = data3.length - 1;
+                    if (!ws3['!merges']) ws3['!merges'] = [];
+                    ws3['!merges'].push(
+                        { s: { r: footerRowIndex3, c: 0 }, e: { r: footerRowIndex3, c: 1 } }, // FM-003
+                        { s: { r: footerRowIndex3, c: 2 }, e: { r: footerRowIndex3, c: 3 } }, // Tanggal
+                        { s: { r: footerRowIndex3, c: 4 }, e: { r: footerRowIndex3, c: 5 } }  // No.Revisi
+                    );
                     
                     // Terapkan style untuk header
                     for (let col = 0; col < data3[0].length; col++) {
@@ -4339,14 +4498,25 @@
                         ws3[cellAddress].s = headerStyle;
                     }
                     
-                    // Terapkan border untuk semua sel
-                    for (let row = 0; row < data3.length; row++) {
+                    // Terapkan border untuk semua sel data
+                    for (let row = 0; row < data3.length - 2; row++) {
                         for (let col = 0; col < data3[row].length; col++) {
                             const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
                             if (!ws3[cellAddress]) ws3[cellAddress] = {};
                             if (!ws3[cellAddress].s) ws3[cellAddress].s = {};
                             ws3[cellAddress].s.border = borderStyle.border;
+                            if (row > 0) {
+                                ws3[cellAddress].s.alignment = { horizontal: "center", vertical: "center" };
+                            }
                         }
+                    }
+                    
+                    // Terapkan style untuk footer
+                    const footerRow3 = data3.length - 1;
+                    for (let col = 0; col < data3[0].length; col++) {
+                        const cellAddress = XLSX.utils.encode_cell({ r: footerRow3, c: col });
+                        if (!ws3[cellAddress]) ws3[cellAddress] = {};
+                        ws3[cellAddress].s = footerStyle;
                     }
                     
                     XLSX.utils.book_append_sheet(wb, ws3, 'Stock Strength');
@@ -5028,5 +5198,5 @@
         // ===== INISIALISASI APLIKASI =====
         document.addEventListener('DOMContentLoaded', AppCore.init);
     </script>
-</body>
-</html>
+
+</body></html>
