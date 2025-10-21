@@ -3,13 +3,14 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main # ganti jika branch utama Anda berbeda
 
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -20,26 +21,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build app
-        run: |
-          if [ -f vite.config.ts ] || [ -f vite.config.js ]; then
-            npm run build
-            cp dist/index.html dist/404.html
-          else
-            npm run build
-            cp build/index.html build/404.html
-          fi
+      - name: Build project
+        run: npm run build
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-        if: ${{ (hashFiles('vite.config.*') != '') }}
-      
-      - name: Deploy to GitHub Pages (CRA)
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-        if: ${{ (hashFiles('vite.config.*') == '') }}
+          publish_dir: ./dist # ganti jika hasil build Anda di folder lain
+          # optional: jika ingin custom domain, tambahkan
+          # cname: your-custom-domain.com
