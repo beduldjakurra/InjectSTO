@@ -1,60 +1,45 @@
-name: Build and Deploy React/TypeScript App to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ "main" ]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  build-deploy:
     runs-on: ubuntu-latest
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Build Next.js application
-        run: npm run build
-        env:
-          NODE_ENV: production
-
-      - name: Copy static files to build output
+      - name: Build app
         run: |
-          # Copy public folder contents (PWA files) to the build output
-          cp -r public/* out/ || true
-          # Ensure no 404.html to avoid GitHub Pages custom 404
-          rm -f out/404.html || true
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
+          if [ -f vite.config.ts ] || [ -f vite.config.js ]; then
+            npm run build
+            cp dist/index.html dist/404.html
+          else
+            npm run build
+            cp build/index.html build/404.html
+          fi
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+        if: ${{ (hashFiles('vite.config.*') != '') }}
+      
+      - name: Deploy to GitHub Pages (CRA)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+        if: ${{ (hashFiles('vite.config.*') == '') }}
