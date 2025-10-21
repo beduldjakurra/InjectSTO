@@ -1,16 +1,20 @@
-import React from 'react';
-import Link from 'next/link';
+'use client';
 
-const HomePage = () => {
+import Image from 'next/image';
+import Link from 'next/link';
+import styles from './page.module.css'; // Import the CSS module for styling
+
+const Page = () => {
   return (
-    <div>
-      <h1>Welcome to the STO Application</h1>
+    <div className={styles.cover}>
+      <div className={styles.logoContainer}>
+        <Image src="/path/to/logo.png" alt="PT Fuji Seat Indonesia" width={150} height={50} />
+      </div>
       <Link href="/dashboard">
-        <button>PWA Application</button>
+        <button className={styles.enterButton}>Enter</button>
       </Link>
-      {/* Other content */}
     </div>
   );
 };
 
-export default HomePage;
+export default Page;
