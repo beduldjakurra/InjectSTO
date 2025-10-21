@@ -1,4 +1,4 @@
-name: Deploy public/ to GitHub Pages (no-404, static)
+name: Build and Deploy React/TypeScript App to GitHub Pages
 
 on:
   push:
@@ -15,19 +15,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Copy static files to build output
+        run: |
+          # Copy public folder contents (PWA files) to the build output
+          cp -r public/* out/ || true
+          # Ensure no 404.html to avoid GitHub Pages custom 404
+          rm -f out/404.html || true
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload public/ as artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: ./out
 
       - name: Deploy to GitHub Pages
         id: deployment
